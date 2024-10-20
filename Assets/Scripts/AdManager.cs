@@ -3,56 +3,48 @@ using GoogleMobileAds.Api;
 
 public class AdManager : MonoBehaviour
 {
-//     private InterstitialAd interstitial;
+    private InterstitialAd interstitial;
 
-//     void Start()
-//     {
-//         MobileAds.Initialize(initStatus => { });
+    void Start()
+    {
+        // Initialize the Google Mobile Ads SDK
+        MobileAds.Initialize(initStatus => { });
 
-//         RequestInterstitial();
-//     }
+        // Load an interstitial ad
+        LoadInterstitialAd();
+    }
 
-//     private void RequestInterstitial()
-//     {
+    private async void LoadInterstitialAd()
+    {
+        // Replace with your own ad unit ID
+        string adUnitId = "ca-app-pub-3940256099942544/1033173712"; // Test ad unit ID
 
-//         string adUnitId = "ca-app-pub-3940256099942544/1033173712"; // dummy id
+        // Create a new instance of the InterstitialAd class
+        interstitial = new InterstitialAd(adUnitId);
 
-//         interstitial = new InterstitialAd(adUnitId);
+        // Load the interstitial ad asynchronously
+        try
+        {
+            // Requesting an interstitial ad
+            AdRequest request = new AdRequest.Builder().Build();
+            await interstitial.LoadAdAsync(request);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Interstitial ad failed to load: " + e.Message);
+        }
+    }
 
-//         interstitial.OnAdClosed += HandleOnAdClosed;
-
-
-//         AdRequest request = new AdRequest.Builder().Build();
-//         interstitial.LoadAd(request);
-//     }
-
-//     public void ShowInterstitial()
-//     {
-//         if (interstitial.IsLoaded())
-//         {
-//             interstitial.Show();
-//         }
-//         else
-//         {
-//             Debug.Log("Interstitial ad is not ready yet.");
-//         }
-//     }
-
-//     private void HandleOnAdClosed(object sender, System.EventArgs args)
-//     {
-//         Debug.Log("Interstitial ad closed");
-
-//         interstitial.Destroy();
-//         RequestInterstitial();
-
-//     }
-
-//     private void OnDestroy()
-//     {
-//         if (interstitial != null)
-//         {
-//             interstitial.OnAdClosed -= HandleOnAdClosed;
-//             interstitial.Destroy();
-//         }
-//     }
+    // Method to show the interstitial ad
+    public void ShowInterstitial()
+    {
+        if (interstitial != null && interstitial.CanShowAd())
+        {
+            interstitial.Show();
+        }
+        else
+        {
+            Debug.Log("Interstitial ad is not ready yet.");
+        }
+    }
 }
